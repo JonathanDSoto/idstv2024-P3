@@ -1,8 +1,21 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -14,6 +27,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -35,17 +50,67 @@ public class Ventana extends JFrame{
 		//quita el molde 
 		this.setLayout(null);
 		
-		this.loadComponents();
+		this.loadComponents(); 
 	}
 	
 	public void loadComponents() {
 		
 		
-		this.login();
+		//this.login();
 		
-		this.registro();
+		//this.registro();
+		
+		//this.admin();
+		
+		//this.calculadora();
+	}
+	
+	
+	public void calculadora() {
+		
+		this.setSize(500,650);
+		
+		JPanel calculadora = new JPanel();
+		calculadora.setSize(this.getWidth(), this.getHeight());
+		calculadora.setLocation(0,0);
+		calculadora.setLayout(new BorderLayout());
+		calculadora.setBackground(Color.black);
+		
+		JLabel input = new JLabel("20.00",4);
+		input.setOpaque(true);
+		input.setBackground(Color.white);
+		input.setFont(new Font("SignPainter", Font.BOLD, 40));
+		calculadora.add(input, BorderLayout.NORTH);
+		
+		JPanel botones = new JPanel();
+		botones.setLayout(new GridLayout(4,3));
+		botones.setBackground(Color.red);
+		calculadora.add(botones,BorderLayout.CENTER );
+		
+		String btn_texts[]= {"9","8","7","6","5","4","3","2","1","0","."};
+		
+		for (int i = 0; i < btn_texts.length; i++) {  
+			botones.add(new JButton(btn_texts[i]));  
+		}
+		
+		JPanel actions = new JPanel();
+		actions.setLayout(new GridLayout(6,1));
+		actions.setBackground(Color.green);
+		
+		actions.setBorder( BorderFactory.createEmptyBorder(0,20,0,20) );
+		
+		calculadora.add(actions,BorderLayout.EAST );
+		
+		String actions_texts[]= {"+","-","*","/","=","CE"};
+		
+		for (int i = 0; i < actions_texts.length; i++) {  
+			actions.add(new JButton(actions_texts[i]));  
+		} 
+		
+		this.add(calculadora);
 		
 	}
+	
 	
 	public void login()
 	{
@@ -74,7 +139,7 @@ public class Ventana extends JFrame{
 		
 		JTextField user_field = new JTextField();
 		user_field.setBounds(10, 120, 180, 30);
-		this.add(user_field);
+		login.add(user_field);
 		
 		JLabel pwd_tag = new JLabel("Contraseña: ");
 		pwd_tag.setFont(new Font("Agency FB", Font.BOLD, 15));
@@ -88,14 +153,23 @@ public class Ventana extends JFrame{
 		pwd_field.setBounds(10, 220, 180, 30);
 		pwd_field.setBackground(Color.red);
 		pwd_field.setOpaque(true);
-		this.add(pwd_field);
+		login.add(pwd_field);
 		
 		JButton login_btn = new JButton("ACCEDER");
 		login_btn.setBounds(10, 270, 180, 30);
-		this.add(login_btn);
+		login.add(login_btn);
+		
+		JLabel img = new JLabel(""); 
+		img.setIcon(new ImageIcon(getClass().getResource("tambien.png")));
+		img.setBounds(10, 300, 256, 256);
+		img.setOpaque(true);
+		img.setBackground(Color.white);
+		login.add(img);
 		
 		this.add(login);
 		this.repaint();
+		
+		login.repaint();
 	}
 	
 	public void registro()
@@ -202,4 +276,165 @@ public class Ventana extends JFrame{
 		this.add(registro);
 		this.repaint();
 	}
+
+	public void admin() {
+		
+		JPanel admin_panel = new JPanel();
+		admin_panel.setSize(this.getWidth(), this.getHeight());
+		admin_panel.setLocation(0,0);
+		admin_panel.setLayout(null);
+		admin_panel.setBackground(Color.pink);
+		
+		JLabel users_tag = new JLabel("Usuarios",0);
+		users_tag.setBounds(350, 20, 300, 80);
+		users_tag.setFont(new Font("SignPainter", Font.BOLD, 80));
+		admin_panel.add(users_tag);
+		
+		//widget
+		
+		JLabel widget_title = new JLabel("Usuarios",0);
+		widget_title.setBounds(40, 120, 300, 40);
+		widget_title.setFont(new Font("SignPainter", Font.BOLD, 40));
+		widget_title.setForeground(Color.white);
+		admin_panel.add(widget_title);
+		
+		JLabel widget_text = new JLabel("80",0);
+		widget_text.setBounds(40, 160, 300, 40);
+		widget_text.setFont(new Font("SignPainter", Font.BOLD, 30));
+		widget_text.setForeground(Color.white);
+		admin_panel.add(widget_text);
+		
+		JLabel widget = new JLabel("");
+		widget.setBounds(40, 120, 300, 80);
+		widget.setOpaque(true);
+		widget.setBackground(Color.black);
+		admin_panel.add(widget); 
+		
+		JButton add_user = new JButton("Añadir");
+		add_user.setBounds(880, 200, 80, 40);
+		admin_panel.add(add_user);
+		
+		JButton download_user = new JButton("Descargar");
+		download_user.setBounds(790, 200, 80, 40);
+		admin_panel.add(download_user);
+		
+		
+		String titles[] = {"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"};
+		String data[][] = {
+				
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"},
+				{"No. Control","Nombre","Apellidos","Correo electrónico","Semestre","Carrera","Acciones"}
+				
+		};
+		
+		JTable table = new JTable(data,titles);
+		//table.setBounds(40, 260, 920, 380);
+		
+		JScrollPane table_scroll = new JScrollPane(table);
+		table_scroll.setBounds(40, 260, 920, 380);
+		
+		admin_panel.add(table_scroll);
+		
+		/*JLabel table = new JLabel();
+		table.setBounds(40, 260, 920, 380);
+		table.setOpaque(true);
+		table.setBackground(Color.black);
+		admin_panel.add(table);*/
+		
+		
+		this.add(admin_panel);
+	}
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		
+		Graphics2D g2d = (Graphics2D) g;
+		
+		this.dibujo1(g2d); 
+		
+		
+		g2d.drawRect(300, 300, 200, 150);
+		
+		g2d.drawRoundRect(350, 350, 200, 200, 15, 15);
+		
+		g2d.setColor(Color.green);
+		g2d.setFont(new Font("SignPainter", Font.BOLD, 80));
+		g2d.drawString("Hola", 400, 140);
+		
+		g2d.fillArc(500, 100, 200, 200, 0, 90);
+		
+		g2d.fillOval(180, 230, 80, 80);
+		
+		int xS2 [] = {255,180,330,255};
+		int yS2 [] = {80, 180,180,80};
+		
+		g2d.fillPolygon(xS2, yS2, 4);
+		
+		g2d.setColor(Color.black);
+		g2d.fillRect(600, 300, 300, 100);
+		
+		g2d.clearRect(650, 350, 100, 50);
+		 
+		try {
+			
+			
+			BufferedImage imagen = ImageIO.read(new File("src/tambien.png"));
+			g2d.drawImage(imagen, 200, 200, null);
+			
+		
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	public void dibujo1(Graphics2D g2d){
+		
+		g2d.drawArc(100, 100, 100, 200, 45, 180);
+		
+		g2d.setColor(Color.red);
+		
+		g2d.drawLine(0, 0, 500, 500);
+		
+		g2d.drawOval(150, 200, 80, 80);
+		
+		g2d.setColor(Color.blue);
+		
+		int xS [] = {225,150,300,225};
+		int yS [] = {50, 150,150,50};
+		g2d.drawPolyline(xS, yS, 4);
+	}
+
+	 
 }
+
+
+
+
+
+
+
