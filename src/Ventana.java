@@ -1,16 +1,23 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -32,9 +39,13 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
-public class Ventana extends JFrame{
-
+public class Ventana extends JFrame implements MouseListener, KeyListener{
+	
+	Random rand = new Random();
+	JPanel panel;
+	
 	public Ventana() {
 		
 		this.setVisible(true);
@@ -51,6 +62,9 @@ public class Ventana extends JFrame{
 		this.setLayout(null);
 		
 		this.loadComponents(); 
+		
+		this.addMouseListener(this);
+		this.addKeyListener(this);
 	}
 	
 	public void loadComponents() {
@@ -63,6 +77,8 @@ public class Ventana extends JFrame{
 		//this.admin();
 		
 		//this.calculadora();
+		
+		this.botones();
 	}
 	
 	
@@ -111,6 +127,50 @@ public class Ventana extends JFrame{
 		
 	}
 	
+	public void botones() {
+		
+		this.setSize(500,650);
+		
+		panel = new JPanel();
+		panel.setSize(this.getWidth(), this.getHeight());
+		panel.setLocation(0,0);
+		panel.setLayout(null);
+		panel.setBackground(Color.gray);
+		
+		
+		JButton action_btn = new JButton("CLICK ME");
+		action_btn.setBounds(150, 540, 220, 60);
+		action_btn.setFont(new Font("SignPainter", Font.BOLD, 30) ); 
+		action_btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				int x = rand.nextInt(400); 
+				int y = rand.nextInt(550);  
+				
+				int w = rand.nextInt(80); 
+				int h = rand.nextInt(80); 
+				
+				int nextInt = rand.nextInt(0xffffff + 1);  
+		        String colorCode = String.format("#%06x", nextInt);
+				
+				JButton tmp = new JButton("H");
+				tmp.setLocation(x, y);
+				tmp.setSize(w, h);
+				tmp.setOpaque(true);
+				tmp.setBackground(Color.decode(colorCode));
+				panel.add(tmp);
+				
+				repaint();
+				revalidate();
+			}
+		});
+		
+		panel.add(action_btn);
+		
+		this.add(panel);
+	}
 	
 	public void login()
 	{
@@ -119,7 +179,7 @@ public class Ventana extends JFrame{
 		login.setSize(this.getWidth()/2, this.getHeight());
 		login.setLocation(0,0);
 		login.setLayout(null);
-		login.setBackground(Color.black);
+		login.setBackground(Color.decode("#6C6867"));
 		
 		JLabel title = new JLabel("Bienvenido al sistema",SwingConstants.CENTER);
 		title.setFont(new Font("Agency FB", Font.BOLD, 20));
@@ -132,31 +192,61 @@ public class Ventana extends JFrame{
 		JLabel user_tag = new JLabel("Correo electrónico: ");
 		user_tag.setFont(new Font("Agency FB", Font.BOLD, 15));
 		user_tag.setBackground(Color.white);
-		user_tag.setLocation(10, 70);
+		user_tag.setLocation(100, 70);
 		user_tag.setSize(180, 30);
 		user_tag.setOpaque(true); 
 		login.add(user_tag);
 		
 		JTextField user_field = new JTextField();
-		user_field.setBounds(10, 120, 180, 30);
+		user_field.setBounds(100, 120, 180, 30);
 		login.add(user_field);
 		
 		JLabel pwd_tag = new JLabel("Contraseña: ");
 		pwd_tag.setFont(new Font("Agency FB", Font.BOLD, 15));
 		pwd_tag.setBackground(Color.white);
-		pwd_tag.setLocation(10, 170);
+		pwd_tag.setLocation(100, 170);
 		pwd_tag.setSize(180, 30);
 		pwd_tag.setOpaque(true); 
 		login.add(pwd_tag);
 		
 		JPasswordField pwd_field = new JPasswordField();
-		pwd_field.setBounds(10, 220, 180, 30);
-		pwd_field.setBackground(Color.red);
+		pwd_field.setBounds(100, 220, 180, 30);
+		pwd_field.setBackground(Color.gray);
 		pwd_field.setOpaque(true);
 		login.add(pwd_field);
 		
 		JButton login_btn = new JButton("ACCEDER");
-		login_btn.setBounds(10, 270, 180, 30);
+		login_btn.setBounds(100, 270, 180, 30);
+		
+		login_btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println("hola");
+				
+				if(user_field.getText().length()<=0) {
+					
+					user_field.setBorder(new LineBorder(Color.RED, 4));
+				}else {
+					user_field.setBorder(new LineBorder(Color.GREEN, 4));
+				}
+				
+				
+				String pwd = new String(pwd_field.getPassword()); 
+				
+				System.out.println(pwd);
+				if(pwd.length() <=0){
+					pwd_field.setBorder(new LineBorder(Color.RED, 4));
+				}else {
+					pwd_field.setBorder(new LineBorder(Color.GREEN, 4));
+				}
+				
+				System.out.println(user_field.getText());
+				System.out.println(pwd_field.getPassword());
+			}
+		});
+		
 		login.add(login_btn);
 		
 		JLabel img = new JLabel(""); 
@@ -258,8 +348,41 @@ public class Ventana extends JFrame{
 		
 		JButton register_btn = new JButton("GUARDAR");
 		register_btn.setBounds(100, 540, 220, 60);
-		register_btn.setFont(new Font("SignPainter", Font.BOLD, 30) );
+		register_btn.setFont(new Font("SignPainter", Font.BOLD, 30) ); 
 		registro.add(register_btn);
+		
+		register_btn.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.out.println("Hola");
+				
+				if( name_field.getText().length()<=0 ) {
+					
+					name_field.setBorder(new LineBorder(Color.RED, 4));
+				}else {
+					name_field.setBorder(new LineBorder(Color.GREEN, 4));
+				}
+				
+				if(type.isSelected() == false) {
+					
+					type.setBorderPainted(true);
+					type.setBorder(new LineBorder(Color.RED, 4));
+					
+				}else {
+					type.setBorderPainted(true);
+					type.setBorder(new LineBorder(Color.GREEN, 4));
+				}
+				
+				if( bio.getText().length()<=0 ) {
+					
+					bio.setBorder(new LineBorder(Color.RED, 4));
+				}else {
+					bio.setBorder(new LineBorder(Color.GREEN, 4));
+				}
+			}
+			
+		});
 		
 		JMenuBar barra = new JMenuBar(); 
 		JMenu lista1 = new JMenu("Archivo");
@@ -368,12 +491,137 @@ public class Ventana extends JFrame{
 	}
 
 	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub 
+		
+		int x = e.getX(); 
+		int y = e.getY();  
+		
+		int w = rand.nextInt(80); 
+		int h = rand.nextInt(80); 
+		
+		int nextInt = rand.nextInt(0xffffff + 1);  
+        String colorCode = String.format("#%06x", nextInt);
+		
+		JButton tmp = new JButton("H");
+		tmp.setLocation(x, y);
+		tmp.setSize(w, h);
+		tmp.setOpaque(true);
+		tmp.setBackground(Color.decode(colorCode));
+		
+		tmp.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				System.out.println("hola");
+				
+				JButton link = (JButton) e.getSource();
+				
+				link.setBackground(Color.red);
+				
+				panel.remove(link);
+				
+				repaint();
+				revalidate();
+			}});
+		
+		panel.add(tmp);
+		
+		repaint();
+		revalidate();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int nextInt = rand.nextInt(0xffffff + 1);  
+        String colorCode = String.format("#%06x", nextInt);
+        
+        panel.setBackground(Color.decode(colorCode));
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println( e.getKeyCode() );
+		
+		if(e.getKeyCode() == 8) {
+			
+			panel.removeAll();
+			repaint();
+			revalidate();
+		}
+		
+		if(e.getKeyCode()==87) {
+			
+			Component arreglo[] = panel.getComponents();
+			
+			for (int i = 0; i < arreglo.length; i++) { 
+				
+				if(arreglo[i].getClass().toString().equals("class javax.swing.JButton")) {
+					
+					JButton link = (JButton) arreglo[i];
+					
+					link.setSize(link.getWidth()+5, link.getHeight()+5);
+					repaint();
+					revalidate();
+				}
+				
+			}
+		}
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/*
+	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
 		
 		Graphics2D g2d = (Graphics2D) g;
 		
-		this.dibujo1(g2d); 
+		g2d.drawArc(100, 100, 100, 200, 45, 180);
+		
+		g2d.setColor(Color.red);
+		
+		g2d.drawLine(0, 0, 500, 500);
+		
+		g2d.drawOval(150, 200, 80, 80);
+		
+		g2d.setColor(Color.blue);
+		
+		int xS [] = {225,150,300,225};
+		int yS [] = {50, 150,150,50};
+		g2d.drawPolyline(xS, yS, 4);
 		
 		
 		g2d.drawRect(300, 300, 200, 150);
@@ -398,8 +646,7 @@ public class Ventana extends JFrame{
 		
 		g2d.clearRect(650, 350, 100, 50);
 		 
-		try {
-			
+		try { 
 			
 			BufferedImage imagen = ImageIO.read(new File("src/tambien.png"));
 			g2d.drawImage(imagen, 200, 200, null);
@@ -410,24 +657,10 @@ public class Ventana extends JFrame{
 		}
 		
 	}
+	*/
 
 
-	public void dibujo1(Graphics2D g2d){
-		
-		g2d.drawArc(100, 100, 100, 200, 45, 180);
-		
-		g2d.setColor(Color.red);
-		
-		g2d.drawLine(0, 0, 500, 500);
-		
-		g2d.drawOval(150, 200, 80, 80);
-		
-		g2d.setColor(Color.blue);
-		
-		int xS [] = {225,150,300,225};
-		int yS [] = {50, 150,150,50};
-		g2d.drawPolyline(xS, yS, 4);
-	}
+	 
 
 	 
 }

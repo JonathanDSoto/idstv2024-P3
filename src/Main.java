@@ -9,8 +9,6 @@ public class Main {
 		
 		Ventana sistema = new Ventana();
 		
-		
-		
 	}
 
 }
