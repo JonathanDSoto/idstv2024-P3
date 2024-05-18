@@ -13,18 +13,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import controllers.AuthController;
 import models.AuthModel;
 
 public class AuthView {
 	
 	private JFrame frame;
 	private AuthModel functions; 
+	private AuthController controller;
 	
 	public AuthView() {
 		
 		frame = new JFrame();
 		frame.setVisible(false);
 		frame.setSize(500, 500);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		functions = new AuthModel();
 	}
@@ -71,11 +74,15 @@ public class AuthView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				frame.getContentPane().remove(panel);
+				/*frame.getContentPane().remove(panel);
 				frame.getContentPane().repaint();
 				frame.getContentPane().revalidate();
 
-				login();
+				login();*/
+				
+				frame.dispose(); 
+				controller = new AuthController(); 
+				controller.login();
 			}
 		});
 		panel.add(btnNewButton_1);
@@ -152,11 +159,18 @@ public class AuthView {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				frame.getContentPane().remove(panel);
+				/*frame.getContentPane().remove(panel);
 				frame.getContentPane().repaint();
 				frame.getContentPane().revalidate();
 
-				register();
+				register();*/
+				
+
+				frame.dispose();
+				
+				controller = new AuthController();
+				
+				controller.registro();
 			}
 		});
 		panel.add(btnNewButton_1);
